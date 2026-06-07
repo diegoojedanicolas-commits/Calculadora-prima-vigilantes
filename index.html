@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de prima de servicios 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f0f0f0;min-height:100vh;padding:16px}
+.card{background:#fff;border-radius:14px;max-width:520px;margin:0 auto;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.header{background:#c8102e;padding:18px 22px 16px}
+.header h1{color:#fff;font-size:16px;font-weight:600;line-height:1.3;margin-bottom:2px}
+.header p{color:rgba(255,255,255,.7);font-size:11px;line-height:1.5}
+.body{padding:20px 22px 22px}
+.section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#888;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid #f0f0f0}
+.section-title:first-of-type{margin-top:0}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:#666;margin-bottom:5px}
+.field input,.field select{width:100%;border:1.5px solid #e0e0e0;border-radius:8px;padding:10px 12px;font-size:14px;font-family:'Inter',sans-serif;color:#111;background:#fff;outline:none;transition:border-color .15s;-webkit-appearance:none;appearance:none}
+.field input:focus,.field select:focus{border-color:#c8102e;box-shadow:0 0 0 3px rgba(200,16,46,.1)}
+.field small{display:block;font-size:11px;color:#aaa;margin-top:4px;line-height:1.4}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.toggle-block{display:flex;align-items:center;justify-content:space-between;background:#fafafa;border:1.5px solid #ececec;border-radius:8px;padding:11px 13px;margin-bottom:16px;gap:12px}
+.toggle-text{font-size:12px;color:#666;line-height:1.4;flex:1}
+.toggle-text b{display:block;font-size:13px;font-weight:600;color:#111;margin-bottom:2px}
+.sw{position:relative;width:42px;height:24px;flex-shrink:0}
+.sw input{opacity:0;position:absolute;width:0;height:0}
+.sw-track{position:absolute;inset:0;background:#ccc;border-radius:12px;cursor:pointer;transition:.2s}
+.sw input:checked+.sw-track{background:#c8102e}
+.sw-track:after{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw input:checked+.sw-track:after{transform:translateX(18px)}
+.turno-table{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12px;table-layout:fixed}
+.turno-table thead th{background:#f5f5f5;color:#888;font-weight:600;padding:7px 10px;text-align:left;border:1px solid #ececec;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+.turno-table thead th:nth-child(2){width:64px;text-align:center}
+.turno-table thead th:nth-child(3){width:90px;text-align:right}
+.turno-table tbody tr{border-bottom:1px solid #f0f0f0}
+.turno-table tbody tr:last-child{border-bottom:none}
+.turno-table td{padding:7px 10px;color:#111;vertical-align:middle}
+.turno-table td:first-child{color:#555}
+.turno-table td:nth-child(2){text-align:center}
+.turno-table td:last-child{padding:5px 10px 5px 6px;text-align:right}
+.turno-table input{width:70px;border:1.5px solid #e0e0e0;border-radius:7px;padding:6px 8px;font-size:13px;font-family:'Inter',sans-serif;color:#111;background:#fff;outline:none;text-align:center;transition:border-color .15s}
+.turno-table input:focus{border-color:#c8102e;box-shadow:0 0 0 2px rgba(200,16,46,.1)}
+.badge-rate{display:inline-block;font-size:10px;color:#9b0d22;background:#fff0f0;border:1px solid #f5c0c0;border-radius:4px;padding:2px 5px;white-space:nowrap;font-weight:600}
+.group-header td{background:#f8f8f8;font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.7px;padding:5px 10px !important;border-bottom:1px solid #ececec}
+.btn-calc{display:block;width:100%;background:#c8102e;color:#fff;border:none;border-radius:9px;padding:14px;font-size:15px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;letter-spacing:.2px;box-shadow:0 4px 14px rgba(200,16,46,.35);transition:background .15s,transform .1s,box-shadow .15s}
+.btn-calc:hover{background:#a50d25;box-shadow:0 6px 18px rgba(200,16,46,.45)}
+.btn-calc:active{background:#8a0b1f;transform:scale(.98);box-shadow:0 2px 8px rgba(200,16,46,.2)}
+.btn-reset{width:100%;background:transparent;color:#bbb;border:1px solid #e8e8e8;border-radius:9px;padding:9px;font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;margin-top:8px;transition:background .15s,color .15s}
+.btn-reset:hover{background:#f5f5f5;color:#666}
+.result{display:none;border-top:1px solid #f0f0f0;margin-top:20px;padding-top:18px}
+.result.show{display:block}
+.rlabel{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#aaa;margin-bottom:6px}
+.rmain{font-size:38px;font-weight:700;color:#c8102e;line-height:1;margin-bottom:3px;letter-spacing:-1px}
+.rsub{font-size:12px;color:#999;margin-bottom:6px}
+.rbadge{display:inline-flex;align-items:center;gap:4px;background:#fff0f0;border:1px solid #f5c0c0;border-radius:6px;padding:4px 10px;font-size:11px;color:#9b0d22;font-weight:600;margin-bottom:16px}
+.breakdown{background:#fafafa;border-radius:8px;border:1px solid #ececec;overflow:hidden;margin-bottom:14px}
+.brow{display:flex;justify-content:space-between;align-items:center;padding:9px 13px;border-bottom:1px solid #ececec;font-size:12px}
+.brow:last-child{border-bottom:none}
+.brow.total{background:#111}
+.brow span:first-child{color:#888}
+.brow span:last-child{font-weight:600;color:#111}
+.brow.total span{color:#fff !important;font-size:14px}
+.brow.subtotal{background:#f5f5f5}
+.brow.subtotal span:last-child{color:#c8102e}
+.alertbox{display:none;background:#fff3cd;border-left:3px solid #ffc107;border-radius:0 6px 6px 0;padding:9px 12px;font-size:12px;color:#664d03;line-height:1.5;margin-bottom:14px}
+.alertbox.show{display:block}
+.errorbox{display:none;background:#fde8ec;border-left:3px solid #c8102e;border-radius:0 6px 6px 0;padding:9px 12px;font-size:12px;color:#7a0c1e;line-height:1.5;margin-bottom:14px}
+.errorbox.show{display:block}
+.info-ref{font-size:11px;color:#bbb;line-height:1.6;padding-top:10px;border-top:1px solid #f0f0f0}
+.section-note{font-size:11px;color:#aaa;margin:-4px 0 10px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <h1>Calculadora de prima de servicios 2026</h1>
+    <p>SMMLV: $1.750.905 · Auxilio de transporte: $249.095 · Jornada nocturna desde las 7 p.m. (Ley 2101/2021)</p>
+  </div>
+  <div class="body">
+    <div class="errorbox" id="errorBox"></div>
+    <div class="alertbox" id="alertBox"></div>
+
+    <p class="section-title">Datos básicos</p>
+    <div class="field">
+      <label>Salario básico mensual</label>
+      <input type="number" id="salario" placeholder="Ej: 1750905" min="0" step="1" inputmode="numeric">
+      <small>No incluya el auxilio de transporte aquí.</small>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Días trabajados</label>
+        <input type="number" id="dias" value="180" min="1" max="180" step="1" inputmode="numeric">
+        <small>Máx. 180 días por semestre</small>
+      </div>
+      <div class="field">
+        <label>Semestre</label>
+        <select id="semestre">
+          <option value="1">1.er semestre</option>
+          <option value="2">2.o semestre</option>
+        </select>
+      </div>
+    </div>
+    <div class="toggle-block">
+      <div class="toggle-text">
+        <b>¿Recibe auxilio de transporte?</b>
+        Solo si el salario es ≤ $3.501.810 (2 SMMLV)
+      </div>
+      <label class="sw">
+        <input type="checkbox" id="auxCheck">
+        <span class="sw-track"></span>
+      </label>
+    </div>
+
+    <p class="section-title">Horas extra y recargos</p>
+    <p class="section-note">Promedio mensual de horas trabajadas en cada turno durante el semestre.</p>
+
+    <table class="turno-table">
+      <thead>
+        <tr>
+          <th>¿Cuándo trabajó?</th>
+          <th>Recargo</th>
+          <th>Horas/mes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="group-header"><td colspan="3">Horas extra — fuera de la jornada ordinaria</td></tr>
+        <tr>
+          <td>Extra de día (6 a.m.–7 p.m.)</td>
+          <td><span class="badge-rate">+25%</span></td>
+          <td><input type="number" id="heD" placeholder="0" min="0" step="1" inputmode="numeric"></td>
+        </tr>
+        <tr>
+          <td>Extra de noche (7 p.m.–6 a.m.)</td>
+          <td><span class="badge-rate">+75%</span></td>
+          <td><input type="number" id="heN" placeholder="0" min="0" step="1" inputmode="numeric"></td>
+        </tr>
+        <tr>
+          <td>Extra en dom. o festivo de día</td>
+          <td><span class="badge-rate">+100%</span></td>
+          <td><input type="number" id="heDD" placeholder="0" min="0" step="1" inputmode="numeric"></td>
+        </tr>
+        <tr>
+          <td>Extra en dom. o festivo de noche</td>
+          <td><span class="badge-rate">+150%</span></td>
+          <td><input type="number" id="heDN" placeholder="0" min="0" step="1" inputmode="numeric"></td>
+        </tr>
+        <tr class="group-header"><td colspan="3">Recargos — dentro de la jornada ordinaria</td></tr>
+        <tr>
+          <td>Turno de noche (7 p.m.–6 a.m.)</td>
+          <td><span class="badge-rate">+35%</span></td>
+          <td><input type="number" id="rN" placeholder="0" min="0" step="1" inputmode="numeric"></td>
+        </tr>
+        <tr>
+          <td>Turno en dom. o festivo de día</td>
+          <td><span class="badge-rate">+75%</span></td>
+          <td><input type="number" id="rDF" placeholder="0" min="0" step="1" inputmode="numeric"></td>
+        </tr>
+        <tr>
+          <td>Turno en dom. o festivo de noche</td>
+          <td><span class="badge-rate">+110%</span></td>
+          <td><input type="number" id="rDFN" placeholder="0" min="0" step="1" inputmode="numeric"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button class="btn-calc" onclick="calcular()">Calcular prima de servicios</button>
+    <button class="btn-reset" onclick="resetear()">Limpiar campos</button>
+
+    <div class="result" id="result">
+      <div class="rlabel" id="rLabel"></div>
+      <div class="rmain" id="rMain"></div>
+      <div class="rsub" id="rSub"></div>
+      <div class="rbadge" id="rBadge"></div>
+      <div class="breakdown" id="breakdown"></div>
+      <div class="info-ref">
+        Fórmula: (Salario + Auxilio* + Promedio horas extra y recargos) × Días / 360<br>
+        *Auxilio incluido si salario ≤ 2 SMMLV. Art. 306 CST · Ley 50/1990 · Jornada nocturna: Ley 2101/2021.
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+var SMMLV=1750905,AUX=249095;
+function fmt(n){return '$'+Math.round(n).toLocaleString('es-CO');}
+function v(id){return parseFloat(document.getElementById(id).value)||0;}
+document.getElementById('salario').addEventListener('input',function(){
+  var sal=parseFloat(this.value)||0;
+  if(sal>0) document.getElementById('auxCheck').checked=sal<=SMMLV*2;
+});
+function calcular(){
+  var sal=v('salario'),dias=v('dias'),sem=parseInt(document.getElementById('semestre').value);
+  var conAux=document.getElementById('auxCheck').checked;
+  var errBox=document.getElementById('errorBox'),warnBox=document.getElementById('alertBox');
+  errBox.className='errorbox';warnBox.className='alertbox';
+  if(sal<=0){errBox.innerHTML='Ingrese el salario básico mensual.';errBox.className='errorbox show';return;}
+  if(dias<1||dias>180){errBox.innerHTML='Los días deben estar entre 1 y 180.';errBox.className='errorbox show';return;}
+  var hb=sal/30/8;
+  var heD_h=v('heD'),heN_h=v('heN'),heDD_h=v('heDD'),heDN_h=v('heDN');
+  var rN_h=v('rN'),rDF_h=v('rDF'),rDFN_h=v('rDFN');
+  var valHeD=hb*1.25*heD_h,valHeN=hb*1.75*heN_h,valHeDD=hb*2.00*heDD_h,valHeDN=hb*2.50*heDN_h;
+  var totalHE=valHeD+valHeN+valHeDD+valHeDN;
+  var valRN=hb*0.35*rN_h,valRDF=hb*0.75*rDF_h,valRDFN=hb*1.10*rDFN_h;
+  var totalRec=valRN+valRDF+valRDFN;
+  var auxBase=conAux?AUX:0;
+  var base=sal+auxBase+totalHE+totalRec;
+  var prima=base*dias/360;
+  var fechaPago=sem===1?'30 de junio de 2026':'20 de diciembre de 2026';
+  var semNombre=sem===1?'1.er semestre 2026':'2.o semestre 2026';
+  document.getElementById('rLabel').textContent='Prima · '+semNombre;
+  document.getElementById('rMain').textContent=fmt(prima);
+  document.getElementById('rSub').textContent='Calculada sobre '+Math.round(dias)+' día'+(dias===1?'':'s')+' trabajados';
+  document.getElementById('rBadge').textContent='Fecha límite de pago: '+fechaPago;
+  var b='';
+  b+='<div class="brow"><span>Salario básico mensual</span><span>'+fmt(sal)+'</span></div>';
+  b+='<div class="brow"><span>Auxilio de transporte</span><span>'+(conAux?fmt(AUX):'No aplica')+'</span></div>';
+  if(totalHE>0){
+    if(heD_h>0) b+='<div class="brow"><span>H. extra diurnas ('+heD_h+'h × 1.25)</span><span>'+fmt(valHeD)+'</span></div>';
+    if(heN_h>0) b+='<div class="brow"><span>H. extra nocturnas ('+heN_h+'h × 1.75)</span><span>'+fmt(valHeN)+'</span></div>';
+    if(heDD_h>0) b+='<div class="brow"><span>H. extra dom./fest. diurnas ('+heDD_h+'h × 2.00)</span><span>'+fmt(valHeDD)+'</span></div>';
+    if(heDN_h>0) b+='<div class="brow"><span>H. extra dom./fest. nocturnas ('+heDN_h+'h × 2.50)</span><span>'+fmt(valHeDN)+'</span></div>';
+    b+='<div class="brow subtotal"><span>Subtotal horas extra</span><span>'+fmt(totalHE)+'</span></div>';
+  }
+  if(totalRec>0){
+    if(rN_h>0) b+='<div class="brow"><span>Recargo nocturno ('+rN_h+'h × 35%)</span><span>'+fmt(valRN)+'</span></div>';
+    if(rDF_h>0) b+='<div class="brow"><span>Recargo dom./fest. diurno ('+rDF_h+'h × 75%)</span><span>'+fmt(valRDF)+'</span></div>';
+    if(rDFN_h>0) b+='<div class="brow"><span>Recargo dom./fest. nocturno ('+rDFN_h+'h × 110%)</span><span>'+fmt(valRDFN)+'</span></div>';
+    b+='<div class="brow subtotal"><span>Subtotal recargos</span><span>'+fmt(totalRec)+'</span></div>';
+  }
+  b+='<div class="brow"><span>Base de liquidación</span><span>'+fmt(base)+'</span></div>';
+  b+='<div class="brow"><span>Factor ('+Math.round(dias)+' días / 360)</span><span>'+(dias/360).toFixed(5)+'</span></div>';
+  b+='<div class="brow total"><span>Prima de servicios</span><span>'+fmt(prima)+'</span></div>';
+  document.getElementById('breakdown').innerHTML=b;
+  if(sal<SMMLV){warnBox.innerHTML='El salario ingresado está por debajo del mínimo legal 2026 ($1.750.905). Verifique el valor.';warnBox.className='alertbox show';}
+  var r=document.getElementById('result');
+  r.className='result show';
+  setTimeout(function(){r.scrollIntoView({behavior:'smooth',block:'start'});},100);
+}
+function resetear(){
+  ['salario','heD','heN','heDD','heDN','rN','rDF','rDFN'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('dias').value='180';
+  document.getElementById('semestre').value='1';
+  document.getElementById('auxCheck').checked=false;
+  document.getElementById('result').className='result';
+  document.getElementById('errorBox').className='errorbox';
+  document.getElementById('alertBox').className='alertbox';
+}
+</script>
+</body>
+</html>
